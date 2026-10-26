@@ -1,5 +1,6 @@
 package residencia.desvicio.api.controller;
 
+<<<<<<< HEAD
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,4 +18,9 @@ public class controllerDemo {
     public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuario);
     }
+=======
+public class controllerDemo {
+
+//    classe vazia por enquanto
+>>>>>>> 303f59a6a5fec6ebf770f070c94e481651eb31d7
 }
