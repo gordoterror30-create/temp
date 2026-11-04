@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import residencia.desvicio.api.model.Usuario;
 import residencia.desvicio.api.model.UsuarioResposta;
-import residencia.desvicio.api.repository.UsuarioRepository;
+import residencia.desvicio.api.service.UsuarioService;
 
 import java.util.List;
 
@@ -16,16 +16,16 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping
     public ResponseEntity<UsuarioResposta> criar(@Valid @RequestBody Usuario usuario) {
 
-        Usuario usuarioCriado = usuarioRepository.save(usuario);
+        Usuario usuarioCriado = usuarioService.cadastrar(usuario);
 
         UsuarioResposta resposta = new UsuarioResposta(
                 usuarioCriado.getId_user(),
@@ -39,12 +39,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResposta> buscarPorId(@PathVariable Long id) {
 
-        return usuarioRepository.findById(id)
-                .map(usuario -> new UsuarioResposta(
-                        usuario.getId_user(),
-                        usuario.getNome(),
-                        usuario.getEmail()
-                ))
+        return usuarioService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -53,15 +48,7 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioResposta>> buscarPorNome(
             @RequestParam String nome) {
 
-        List<UsuarioResposta> usuarios = usuarioRepository
-                .findByNomeContainingIgnoreCase(nome)
-                .stream()
-                .map(usuario -> new UsuarioResposta(
-                        usuario.getId_user(),
-                        usuario.getNome(),
-                        usuario.getEmail()
-                ))
-                .toList();
+        List<UsuarioResposta> usuarios = usuarioService.buscarPorNome(nome);
 
         return ResponseEntity.ok(usuarios);
     }
